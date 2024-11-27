@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Cadastro de Produtos
+{% endblock %}
+
+{% block conteudo %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-gradient-to-r from-green-400 to-blue-500 text-white text-center rounded-top" style="background-color: #2BA536;">
+                    <h3 style="margin-top: 10px;">Criar Novo Produto</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="form-group">
+                            {{ form.nome.label(class="form-label font-semibold text-gray-700") }} 
+                            {{ form.nome(class="form-control rounded-lg border-gray-300 shadow-sm") }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.preco.label(class="form-label font-semibold text-gray-700") }} 
+                            {{ form.preco(class="form-control rounded-lg border-gray-300 shadow-sm") }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.cod_barra.label(class="form-label font-semibold text-gray-700") }} 
+                            {{ form.cod_barra(class="form-control rounded-lg border-gray-300 shadow-sm") }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.descricao.label(class="form-label font-semibold text-gray-700") }} 
+                            {{ form.descricao(class="form-control rounded-lg border-gray-300 shadow-sm") }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.imagem.label(class="form-label font-semibold text-gray-700") }}
+                            {{ form.imagem(class="form-control rounded-lg border-gray-300 shadow-sm") }}
+                        </div>
+
+                        <div class="d-flex justify-content-center" style="background-color: #2BA536; margin-top: 2em; border-radius:20px; ; max-width: 10em; margin-left: auto; margin-right: auto">
+                            {{ form.submit(class="btn btn-gradient-to-r from-green-400 to-blue-500 text-white rounded-full px-5 py-2 shadow-md") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f4f7fc;
+        color: #333;
+    }
+
+    .card {
+        border-radius: 20px;
+    }
+
+    .btn {
+        font-size: 16px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+    }
+</style>
+{% endblock %}

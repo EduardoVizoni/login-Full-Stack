@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Produtos
+{% endblock %}
+
+{% block conteudo %}
+<div class="container">
+  <div class="yellowbox mb-4">
+    <h2>Confira nossas ofertas incríveis!</h2>
+    <img src="{{url_for('static',filename='../static/img/imagem1.png')}}" width="400">
+  </div>
+
+  {% if current_user.email == 'admin@gmail.com' %}
+  <div class="d-flex justify-content-center mb-3">
+    <a href="{{ url_for('criar_produto') }}" class="btn btn-primary btn-lg">Criar Novo Produto</a>
+  </div>
+  {% endif %}
+
+  <!-- Formulário de pesquisa -->
+  <form method="GET" action="{{ url_for('page_produto') }}" class="mb-4">
+    <div class="input-group">
+      <input type="text" name="search" class="form-control" placeholder="Pesquisar produtos..." value="{{ search_query }}">
+      <button type="submit" class="btn btn-primary">Pesquisar</button>
+    </div>
+  </form>
+
+  <!-- Exibe os produtos -->
+  {% if search_query %}
+    <h4>Resultados da pesquisa para "{{ search_query }}"</h4>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for item in itens %}
+      <div class="col">
+        <div class="card h-100">
+          <img src="{{ url_for('static', filename='img/' + item.imagem) }}" class="card-img-top" alt="{{ item.nome }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ item.nome }}</h5>
+            <p class="card-text"><strong>Preço:</strong> {{ item.preco }}</p>
+
+            {% if current_user.email == 'admin@gmail.com' %}
+              <a href="{{ url_for('page_produto_detalhes', produto_id=item.Id) }}" class="btn btn-primary">Vizualizar</a>
+              <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ item.Id }}">
+                Excluir
+              </button>
+            {% endif %}
+
+            {% if current_user.email != 'admin@gmail.com' %}
+              <a href="{{ url_for('page_produto_detalhes', produto_id=item.Id) }}" class="btn btn-primary">Comprar</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <!-- Exibe todos os produtos quando não há pesquisa -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for item in itens %}
+      <div class="col">
+        <div class="card h-100">
+          <img src="{{ url_for('static', filename='img/' + (item.imagem if item.imagem else 'default.jpg')) }}" class="card-img-top" alt="Imagem do item" style="max-width: 450px; height: 250px;">
+          <div class="card-body" style="text-align: left;">
+            <h5 class="card-title">{{ item.nome }}</h5>
+            <p class="card-text"><strong>Preço:</strong> R$ {{ item.preco }}</p>
+          </div>
+
+          <div class="card-footer" style="text-align: left; display: flex; align-items: center;">
+            <a href="{{ url_for('page_produto_detalhes', produto_id=item.Id) }}" class="btn btn-primary">Visualizar</a>
+            
+            {% if current_user.email == 'admin@gmail.com' %}
+              <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ item.Id }}">
+                Excluir
+              </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Modal de confirmação para exclusão -->
+  {% for item in itens %}
+  <div class="modal fade" id="confirmDeleteModal{{ item.Id }}" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" style="color: black;" id="confirmDeleteModalLabel">Confirmar Exclusão</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="color: black;">
+          Tem certeza de que deseja excluir o produto "{{ item.nome }}"?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
+          <form action="{{ url_for('excluir_produto', produto_id=item.Id) }}" method="POST" style="display: inline-block;">
+            <button type="submit" class="btn btn-danger">Excluir</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
+
+  body {
+    font-family: "Poppins", sans-serif;
+    background-color: #ffff;
+    color: white;
+  }
+
+  .yellowbox {
+    background-color: #2BA536;
+    border-radius: 30px;
+    padding: 2em;
+    color: #ffff;
+    text-decoration: none;
+    align-items: center;
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 6em;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn {
+    background-color: #2BA536 !important;
+    border-radius: 5px !important;
+    border: none !important;
+  }
+
+  .btn-success {
+    background-color: #2BA536 !important;
+    border-radius: 10px !important;
+  }
+
+  .btn-primary {
+    background-color: #2BA536 !important;
+    border-radius: 20px !important;
+  }
+
+  .btn-danger {
+    background-color: #d60000 !important;
+    border-radius: 20px !important;
+    margin-left: 10px;
+  }
+</style>
+{% endblock %}
